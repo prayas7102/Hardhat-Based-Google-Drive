@@ -1,34 +1,46 @@
 import { useState } from "react";
 import axios from "axios";
+import { create } from 'ipfs-http-client'
 import "./FileUpload.css";
+
 const FileUpload = ({ contract, account, provider }) => {
   const [file, setFile] = useState(null);
+  const [cidData, setCid] = useState([]);
   const [fileName, setFileName] = useState("No image selected");
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (file) {
-      try {
-        const formData = new FormData();
-        formData.append("file", file);
 
-        const resFile = await axios({
-          method: "post",
-          url: "https://api.pinata.cloud/pinning/pinFileToIPFS",
-          data: formData,
-          headers: {
-            pinata_api_key: `Enter Your Key`,
-            pinata_secret_api_key: `Enter Your Secret Key`,
-            "Content-Type": "multipart/form-data",
-          },
-        });
-        const ImgHash = `ipfs://${resFile.data.IpfsHash}`;
-        //const signer = contract.connect(provider.getSigner());
-        const signer = contract.connect(provider.getSigner());
-        signer.add(account, ImgHash);
-      } catch (e) {
-        alert("Unable to upload image to Pinata");
-      }
-    }
+    const ipfs =await create({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' });
+    const formData = new FormData();
+    formData.append("file", file);
+    const cid = await ipfs.addAll('formData');
+    cidData.push(cid)
+    console.log(`Image uploaded to IPFS with cid: ${cid}`, cidData);
+
+    // if (file) {
+    //   try {
+    //     const formData = new FormData();
+    //     formData.append("file", file);
+    //     console.log(file)
+    //     const resFile = await axios({
+    //       method: "post",
+    //       url: "https://api.pinata.cloud/pinning/pinFileToIPFS",
+    //       data: formData,
+    //       headers: {
+    //         pinata_api_key: `84cf60ff21ad9981a46a`,
+    //         pinata_secret_api_key: `47ae073803cf772429231840a3ad1ccc103ac0eddf89c1ecb69c14831735e2b9`,
+    //         "Content-Type": "multipart/form-data",
+    //       },
+    //     });
+    //     const ImgHash = `ipfs://${resFile.data.IpfsHash}`;
+    //     const signer = contract.connect(provider.getSigner());
+    //     signer.add(account, ImgHash);
+    //   } catch (e) {
+    //     alert(e,"Unable to upload image to Pinata");
+    //   }
+    // }
+
     alert("Successfully Image Uploaded");
     setFileName("No image selected");
     setFile(null);
