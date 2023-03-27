@@ -8,6 +8,41 @@ const FileUpload = ({ contract, account, provider }) => {
   const [cidData, setCid] = useState([]);
   const [fileName, setFileName] = useState("No image selected");
 
+//  import React, { useState, useEffect } from 'react';
+// import { create } from 'ipfs-http-client';
+
+// const ipfs = create({ url: 'https://ipfs.infura.io' });
+
+// function App() {
+//   const [imageURL, setImageURL] = useState('');
+
+//   useEffect(() => {
+//     async function getImage() {
+//       try {
+//         const cid = 'your_cid_here';
+//         const image = await ipfs.get(cid);
+//         const url = URL.createObjectURL(new Blob([image.content]));
+//         setImageURL(url);
+//       } catch (error) {
+//         console.log(error);
+//       }
+//     }
+//     getImage();
+//   }, []);
+
+//   return (
+//     <div>
+//       {imageURL ? (
+//         <img src={imageURL} alt="IPFS Image" />
+//       ) : (
+//         <p>Loading Image...</p>
+//       )}
+//     </div>
+//   );
+// }
+
+export default App;
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
